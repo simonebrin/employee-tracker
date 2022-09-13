@@ -1,6 +1,7 @@
 import inquirer from "inquirer";
 import db from "./connection/connection";
 import CTable from "console.table";
+
 const menuQuestions = {
     type: "list",
     name: "answer",
