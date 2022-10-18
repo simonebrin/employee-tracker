@@ -17,5 +17,10 @@
     "url": "https://github.com/simonebrin/employee-tracker/issues"
   },
   "homepage": "https://github.com/simonebrin/employee-tracker#readme",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^8.2.4",
+    "mysql2": "^2.3.3"
+  }
 }

@@ -2,15 +2,22 @@ import inquirer from "inquirer";
 import db from "./connection/connection";
 import CTable from "console.table";
 
-const menuQuestions = {
+const menuQuestions = [
+    {
     type: "list",
     name: "answer",
-    message: "What would you like to do next?",
-    choices: ["view all departments", "view all roles", "view all employees", "add a department", "add a role", "add an employee", "update an employee"]
-}
+    message: "What would you like to do?",
+    choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee"],
+    },
+]
 
 function menuQuestion() {
-    inquirer.prompt(menuQuestions)
+    inquirer.prompt(menuQuestions).then((answers) => {
+        console.log(answers);
+        if (answers.menuQuestions === "View all departments") {
+            
+        }
+    })
 }
 
 menuQuestion();
