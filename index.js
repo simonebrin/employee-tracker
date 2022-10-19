@@ -11,16 +11,40 @@ const mainMenuQuestions = [
     },
 ]
 
+function listDepartments() {
+  db.promise()
+    .query("SELECT departments.department_name FROM departments;")
+    .then((departments) => {
+      console.table(departments[0]);
+    });
+}
+
+function listRoles() {
+  db.promise()
+    .query("SELECT roles.title FROM roles;")
+    .then((roles) => {
+      console.table(roles[0]);
+    });
+}
+
 function menuQuestion() {
     inquirer.prompt(mainMenuQuestions).then((answers) => {
-        console.log(answers);
-        if (answers.mainMenuQuestions === 'View all departments') {
-            
+        console.log(answers.answer);
+        switch (answers.answer) {
+          case "View all departments":
+            listDepartments();
+            break;
+          case "View all roles":
+            listRoles();
+            break;
+
+          default:
+            break;
         }
     })
 }
 
-// menuQuestion();
+menuQuestion();
 db.promise()
   .query(
     'SELECT roles.title, roles.salary, departments.department_name as department FROM roles LEFT JOIN departments on roles.department_id=departments.id;'
@@ -37,21 +61,23 @@ const addDepartmentQuestion = [
     }
 ]
 
-const addRoleQuestions = [
-    {
-        type: 'input',
-        name: 'role',
-        message: 'Input role:'
-    },
-    {
-        type: 'input',
-        name: 'salary',
-        message: 'Enter new role salary:'
-    },
-    {
-        type: 'list',
-        name: 'departments',
-        message: 'Select your department:',
-        choices: 
-    }
-]
+
+
+// const addRoleQuestions = [
+//     {
+//         type: 'input',
+//         name: 'role',
+//         message: 'Input role:'
+//     },
+//     {
+//         type: 'input',
+//         name: 'salary',
+//         message: 'Enter new role salary:'
+//     },
+//     {
+//         type: 'list',
+//         name: 'departments',
+//         message: 'Select your department:',
+//         choices: 
+//     }
+// ]
