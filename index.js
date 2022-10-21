@@ -1,7 +1,9 @@
 import inquirer from "inquirer";
 import db from "./connection/connection.js";
 import CTable from "console.table";
-// import { connection } from "mongoose";
+
+
+
 
 const mainMenuQuestions = [
   {
@@ -51,6 +53,24 @@ function viewEmployees() {
     });
 }
 
+function addDepartment() {
+  inquirer.prompt([
+    {
+      type: 'input',
+      name: 'newDepartment',
+      message: 'What is the department name?',
+    }
+  ]).then(answer => {
+    console.log(answer)
+    // db.promise()
+    db.query('INSERT INTO departments (newDepartment) SET?', { department_name: answer.newDepartment }, (err, res) => {
+      // if (err) throw err;
+      console.table(answer)
+      menuQuestion();
+    });
+  });
+}
+
 function menuQuestion() {
   inquirer.prompt(mainMenuQuestions).then((answers) => {
     console.log(answers.answer);
@@ -63,6 +83,9 @@ function menuQuestion() {
         break;
       case "View all employees":
         viewEmployees();
+        break;
+      case "Add a department":
+        addDepartment();
         break;
 
       default:
