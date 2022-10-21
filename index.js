@@ -63,7 +63,7 @@ function addDepartment() {
   ]).then(answer => {
     console.log(answer)
     // db.promise()
-    db.query('INSERT INTO departments (newDepartment) SET?', { department_name: answer.newDepartment }, (err, res) => {
+    db.query('INSERT INTO departments SET?', { department_name: answer.newDepartment }, (err, res) => {
       // if (err) throw err;
       console.table(answer)
       menuQuestion();
@@ -96,13 +96,13 @@ function menuQuestion() {
 
 menuQuestion();
 
-db.promise()
-  .query(
-    "SELECT roles.title, roles.salary, departments.department_name as department FROM roles LEFT JOIN departments on roles.department_id=departments.id;"
-  )
-  .then((roles) => {
-    console.table(roles[0]);
-  });
+// db.promise()
+//   .query(
+//     "SELECT roles.title, roles.salary, departments.department_name as department FROM roles LEFT JOIN departments on roles.department_id=departments.id;"
+//   )
+//   .then((roles) => {
+//     console.table(roles[0]);
+//   });
 
 const addDepartmentQuestion = [
   {
