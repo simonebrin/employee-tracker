@@ -12,7 +12,7 @@ const db = mysql.createConnection(
       password: 'password',
       database: 'employeetracker'
     },
-    console.log('Connected to the employeetracker database.')
+    // console.log('Connected to the employeetracker database.')
   );
 
   export default db;

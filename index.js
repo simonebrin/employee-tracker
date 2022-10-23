@@ -3,8 +3,6 @@ import db from "./connection/connection.js";
 import CTable from "console.table";
 
 
-
-
 const mainMenuQuestions = [
   {
     type: "list",
@@ -61,11 +59,10 @@ function addDepartment() {
       message: 'What is the department name?',
     }
   ]).then(answer => {
-    console.log(answer)
+    // console.log(answer)
     // db.promise()
     db.query('INSERT INTO departments SET?', { department_name: answer.newDepartment }, (err, res) => {
-      // if (err) throw err;
-      console.table(answer)
+      // console.table(answer)
       menuQuestion();
     });
   });
@@ -102,7 +99,7 @@ function addRole() {
       ])
     })
     .then(answer => {
-      console.log(answer);
+      // console.log(answer);
       return db.promise().query('INSERT INTO roles SET ?', { title: answer.role, salary: answer.salary, department_id: answer.department});
     })
     .then(res => {
@@ -139,7 +136,7 @@ async function addEmployee() {
   ]).then(function (res) {
     let roleId = res.role
     let managerId = res.manager
-    console.log({ managerId })
+    // console.log({ managerId })
     
     db.query('INSERT INTO employees SET ?',
       {
@@ -149,7 +146,7 @@ async function addEmployee() {
         roles_id: roleId,
       },
       function (err) {
-        console.table(res)
+        // console.table(res)
         menuQuestion();
     })
   })
@@ -173,7 +170,7 @@ async function updateEmployee() {
     .then(function (res) {
       let employeeName = res.select
       let employeeRole = res.assign
-      console.log({ employeeRole })
+      // console.log({ employeeRole })
       
       db.query('INSERT INTO employees SET ?',
         {
@@ -181,7 +178,7 @@ async function updateEmployee() {
           roles_id: employeeRole,
         },
         function (err) {
-          console.table(res)
+          // console.table(res)
           menuQuestion();
         })
     })
@@ -284,7 +281,6 @@ async function updateEmployee() {
       }
     });
   }
-
 
 
   menuQuestion();
