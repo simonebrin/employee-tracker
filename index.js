@@ -71,6 +71,46 @@ function addDepartment() {
   });
 }
 
+function addRole() {
+  db.promise().query('SELECT * FROM departments')
+    .then((res) => {
+      return res[0].map(departments => {
+        return {
+          name: departments.department_name,
+          value: departments.id
+        }
+      })
+    })
+    .then((departments) => {
+      return inquirer.prompt([
+        {
+          type: 'input',
+          name: 'role',
+          message: 'What role would you like to add?'
+        },
+        {
+          type: 'input',
+          name: 'salary',
+          message: 'What is the salary for this role?'
+        },
+        {
+          type: 'list',
+          name: 'department',
+          choices: departments,
+          message: 'Select the department for this role:'
+        }
+      ])
+    })
+    .then(answer => {
+      console.log(answer);
+      return db.promise().query('INSERT INTO roles SET ?', { title: answer.role, salary: answer.salary, department_id: answer.department});
+    })
+    .then(res => {
+      console.log('New role added')
+      menuQuestion();
+    });
+}
+
 function menuQuestion() {
   inquirer.prompt(mainMenuQuestions).then((answers) => {
     console.log(answers.answer);
@@ -86,6 +126,9 @@ function menuQuestion() {
         break;
       case "Add a department":
         addDepartment();
+        break;
+      case "Add a role":
+        addRole();
         break;
 
       default:
