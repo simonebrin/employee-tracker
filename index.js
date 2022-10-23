@@ -127,7 +127,7 @@ async function addEmployee() {
     {
       type: 'list',
       name: 'role',
-      choices: await SelectRole(),
+      choices: await selectRole(),
       message: 'Select their role:'
     },
     {
@@ -155,98 +155,172 @@ async function addEmployee() {
   })
 }
 
-function selectManager()
-{
-  return db.promise().query('SELECT * FROM employees')
-    .then(res => {
-      return res[0].map(employees => {
-        return {
-          name: `${employees.first_name} ${employees.last_name}`,
-          value: employees.roles_id,
-      }
-    })
-  })
-}
-
-function SelectRole() {
-  return db.promise().query('SELECT * FROM roles')
-    .then(res => {
-      return res[0].map(role => {
-        return {
-          name: role.title,
-          value: role.id
-      }
-    })
-  })
-}
-
-function menuQuestion() {
-  inquirer.prompt(mainMenuQuestions).then((answers) => {
-    console.log(answers.answer);
-    switch (answers.answer) {
-      case "View all departments":
-        listDepartments();
-        break;
-      case "View all roles":
-        listRoles();
-        break;
-      case "View all employees":
-        viewEmployees();
-        break;
-      case "Add a department":
-        addDepartment();
-        break;
-      case "Add a role":
-        addRole();
-        break;
-      case "Add an employee":
-        addEmployee();
-        break;
-      case "Update an employee":
-        addRole();
-        break;
-
-      default:
-        break;
+async function updateEmployee() {
+  inquirer.prompt([
+    {
+      type: 'list',
+      name: 'select',
+      choices: await selectEmployee(),
+      message: 'Which employee would you like to update?'
+    },
+    {
+      type: 'list',
+      name: 'assign',
+      choices: await selectRole(),
+      message: 'What role would you like to assign this employee?'
     }
-  });
+  ])
+    .then(function (res) {
+      let employeeName = res.select
+      let employeeRole = res.assign
+      console.log({ employeeRole })
+      
+      db.query('INSERT INTO employees SET ?',
+        {
+          id: employeeName,
+          roles_id: employeeRole,
+        },
+        function (err) {
+          console.table(res)
+          menuQuestion();
+        })
+    })
 }
 
+           
+  //            roles_id = `${employees.id}', { id: answer.select, roles_id: answer.assign });
+  //      })
+  //      .then(res => {
+  //        console.log('Employee updated')
+  //        menuQuestion();
+  //      });
+  // }
+
+  //  .then(answer => {
+  //       return db.promise().query('INSERT INTO employees SET ?', { id: answer.select, roles_id: answer.assign });
+  //     })
+  //     .then(res => {
+  //       console.log('Employee updated')
+  //       menuQuestion();
+
+  // .then(function (res) {
+  //   let employeeName = res.select
+  //   let employeeRole = res.assign
+  //   db.query('INSERT INTO employees SET ?',
+  //     {
+  //       id: employeeName,
+  //       roles_id: employeeRole,
+  //     },
+  //     function (err) {
+  //       console.table(res)
+  //       menuQuestion();
+  //     })
+  //   })
+
+  function selectManager() {
+    return db.promise().query('SELECT * FROM employees')
+      .then(res => {
+        return res[0].map(employees => {
+          return {
+            name: `${employees.first_name} ${employees.last_name}`,
+            value: employees.roles_id,
+          }
+        })
+      })
+  }
+
+  function selectRole() {
+    return db.promise().query('SELECT * FROM roles')
+      .then(res => {
+        return res[0].map(role => {
+          return {
+            name: role.title,
+            value: role.id
+          }
+        })
+      })
+  }
+
+  function selectEmployee() {
+    return db.promise().query('SELECT * FROM employees')
+      .then(res => {
+        return res[0].map(employees => {
+          return {
+            name: `${employees.first_name} ${employees.last_name}`,
+            value: employees.roles_id,
+          };
+        })
+      })
+  }
+
+  function menuQuestion() {
+    inquirer.prompt(mainMenuQuestions).then((answers) => {
+      console.log(answers.answer);
+      switch (answers.answer) {
+        case "View all departments":
+          listDepartments();
+          break;
+        case "View all roles":
+          listRoles();
+          break;
+        case "View all employees":
+          viewEmployees();
+          break;
+        case "Add a department":
+          addDepartment();
+          break;
+        case "Add a role":
+          addRole();
+          break;
+        case "Add an employee":
+          addEmployee();
+          break;
+        case "Update an employee":
+          updateEmployee();
+          break;
+
+        default:
+          break;
+      }
+    });
+  }
 
 
-menuQuestion();
 
-// db.promise()
-//   .query(
-//     "SELECT roles.title, roles.salary, departments.department_name as department FROM roles LEFT JOIN departments on roles.department_id=departments.id;"
-//   )
-//   .then((roles) => {
-//     console.table(roles[0]);
-//   });
+  menuQuestion();
 
-const addDepartmentQuestion = [
-  {
-    type: "input",
-    name: "department",
-    message: "Add the department name",
-  },
-];
+  // db.promise()
+  //   .query(
+  //     "SELECT roles.title, roles.salary, departments.department_name as department FROM roles LEFT JOIN departments on roles.department_id=departments.id;"
+  //   )
+  //   .then((roles) => {
+  //     console.table(roles[0]);
+  //   });
 
-// const addRoleQuestions = [
-//     {
-//         type: 'input',
-//         name: 'role',
-//         message: 'Input role:'
-//     },
-//     {
-//         type: 'input',
-//         name: 'salary',
-//         message: 'Enter new role salary:'
-//     },
-//     {
-//         type: 'list',
-//         name: 'departments',
-//         message: 'Select your department:',
-//         choices:
-//     }
-// ]
+  // const addDepartmentQuestion = [
+  //   {
+  //     type: "input",
+  //     name: "department",
+  //     message: "Add the department name",
+  //   },
+  // ];
+
+  // const addRoleQuestions = [
+  //     {
+  //         type: 'input',
+  //         name: 'role',
+  //         message: 'Input role:'
+  //     },
+  //     {
+  //         type: 'input',
+  //         name: 'salary',
+  //         message: 'Enter new role salary:'
+  //     },
+  //     {
+  //         type: 'list',
+  //         name: 'departments',
+  //         message: 'Select your department:',
+  //         choices:
+  //     }
+  // ]
+
