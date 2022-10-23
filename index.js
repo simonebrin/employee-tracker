@@ -111,6 +111,75 @@ function addRole() {
     });
 }
 
+async function addEmployee() {
+  const managers = await selectManager();
+  inquirer.prompt([
+    {
+      type: 'input',
+      name: 'first',
+      message: 'What is their first name?'
+    },
+    {
+      type: 'input',
+      name: 'last',
+      message: 'What is their last name?'
+    },
+    {
+      type: 'list',
+      name: 'role',
+      choices: await SelectRole(),
+      message: 'Select their role:'
+    },
+    {
+      type: 'list',
+      name: 'manager',
+      choices: managers,
+      message: "Select their manager's name:"
+    }
+  ]).then(function (res) {
+    let roleId = res.role
+    let managerId = res.manager
+    console.log({ managerId })
+    
+    db.query('INSERT INTO employees SET ?',
+      {
+        first_name: res.first,
+        last_name: res.last,
+        manager_id: managerId,
+        roles_id: roleId,
+      },
+      function (err) {
+        console.table(res)
+        menuQuestion();
+    })
+  })
+}
+
+function selectManager()
+{
+  return db.promise().query('SELECT * FROM employees')
+    .then(res => {
+      return res[0].map(employees => {
+        return {
+          name: `${employees.first_name} ${employees.last_name}`,
+          value: employees.roles_id,
+      }
+    })
+  })
+}
+
+function SelectRole() {
+  return db.promise().query('SELECT * FROM roles')
+    .then(res => {
+      return res[0].map(role => {
+        return {
+          name: role.title,
+          value: role.id
+      }
+    })
+  })
+}
+
 function menuQuestion() {
   inquirer.prompt(mainMenuQuestions).then((answers) => {
     console.log(answers.answer);
@@ -130,12 +199,20 @@ function menuQuestion() {
       case "Add a role":
         addRole();
         break;
+      case "Add an employee":
+        addEmployee();
+        break;
+      case "Update an employee":
+        addRole();
+        break;
 
       default:
         break;
     }
   });
 }
+
+
 
 menuQuestion();
 
